@@ -1,5 +1,8 @@
 # E. coli ndh Adaptive Laboratory Evolution — Bulk RNA-seq
 
+## Study Link
+https://doi.org/10.1128/spectrum.02225-23
+
 ## Study Context
 
 Transcriptomic profiling of *E. coli* K-12 MG1655 Δ*ndh* (NADH dehydrogenase II knockout)
