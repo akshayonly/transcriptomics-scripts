@@ -1,0 +1,37 @@
+# Data & outputs — never commit raw sequencing data
+*.fastq
+*.fastq.gz
+*.bam
+*.bam.bai
+*.sam
+*.sra
+
+# featureCounts / count outputs
+counts/
+alignments/
+ref/
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.egg-info/
+dist/
+build/
+.venv/
+env/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Results & figures (optional — remove if you want to track these)
+results/
+*.pdf
+*.png
+
+# System
+.DS_Store
+Thumbs.db
+*.log
