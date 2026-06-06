@@ -18,6 +18,7 @@ GFF_FILE=""
 OUT_DIR="strand_test"
 THREADS=4
 CONFIG_OUT="$OUT_DIR/strand_config.txt"
+SUBSAMPLE=500000
 
 # =============================================================================
 # Functions
@@ -37,6 +38,7 @@ Required Arguments:
 
 Optional Arguments:
   -o, --outdir DIR         Output directory for test files (Default: strand_test)
+  -n, --subsample INT      Number of reads to subsample (Default: 500000)
   -t, --threads INT        Number of processing threads (Default: 4)
   -c, --config FILE        Config output file path (Default: strand_config.txt)
   -h, --help               Show this help message and exit
@@ -67,6 +69,7 @@ while [[ "$#" -gt 0 ]]; do
         -b|--bam)    BAM_FILE="$2"; shift ;;
         -g|--gff)    GFF_FILE="$2"; shift ;;
         -o|--outdir) OUT_DIR="$2"; shift ;;
+        -n|--subsample) SUBSAMPLE="$2"; shift ;;
         -t|--threads) THREADS="$2"; shift ;;
         -c|--config) CONFIG_OUT="$2"; shift ;;
         *) echo "Error: Unknown parameter: $1" >&2; usage; exit 1 ;;
@@ -113,7 +116,7 @@ echo "────────────────────────�
 # then use head on the non-header lines only, avoiding the pipe issue.
 
 TEST_BAM="$OUT_DIR/subsample.bam"
-echo "Extracting a lightweight subsample (500k reads) for instant testing..."
+echo "Extracting a lightweight subsample (${SUBSAMPLE} reads) for instant testing..."
 
 # Write header first, then stream body lines through head, recombine
 # Each step is a separate command — no chained pipes that trigger SIGPIPE
@@ -121,7 +124,9 @@ HEADER_FILE="$OUT_DIR/header.sam"
 BODY_FILE="$OUT_DIR/body.sam"
 
 samtools view -H "$BAM_FILE" > "$HEADER_FILE"
-samtools view    "$BAM_FILE" | head -n 500000 > "$BODY_FILE" || true
+# samtools view    "$BAM_FILE" | head -n 500000 > "$BODY_FILE" || true
+# Removed hardcodded sample size
+samtools view    "$BAM_FILE" | head -n "$SUBSAMPLE" > "$BODY_FILE" || true
 # '|| true' absorbs the SIGPIPE exit code from samtools when head closes
 
 cat "$HEADER_FILE" "$BODY_FILE" | samtools view -b -o "$TEST_BAM"
